@@ -1,0 +1,40 @@
+{
+    "title": "n3rgy data",
+    "config": {
+        "step": {
+            "user": {
+                "title": "Sensor Configuration",
+                "description": "If you need help with the configuration have a look here:\nhttps://github.com/smartechru/n3rgy.",
+                "data": {
+                    "name": "Name",
+                    "host": "Host",
+                    "api_key": "API Key",
+                    "property_id": "Property ID (can be either an MPAN or MPRN)"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "invalid_api_key": "Invalid API key",
+            "unknown": "Unexpected error"
+        },
+        "abort": {
+            "single_instance_allowed": "Already configured. Only a single configuration possible."
+        }
+    },
+    "options": {
+        "step": {
+            "user": {
+                "title": "Sensor Options",
+                "description": "You can set the environment, start datetime, end datetime.\nA 'Grant Consent' service in a Live environment will be available soon.\nIf you need help with the configuration have a look here:\nhttps://github.com/smartechru/n3rgy.",
+                "data": {
+                    "environment": "Live environment (for real MPxNs)",
+                    "daily_update": "Daily update",
+                    "utility": "Utility",
+                    "start": "Start (format: YYYYMMDDHHmm)",
+                    "end": "End (format: YYYYMMDDHHmm)"
+                }
+            }
+        }
+    }
+}

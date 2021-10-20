@@ -1,0 +1,8 @@
+{
+    "name": "KCS TraceME N1Cx",
+    "zip_release": false,
+    "filename": "kcs_n1cx.zip",
+    "domains": ["kcs_n1cx", "sensor"],
+    "iot_class": "Local Push",
+    "homeassistant": "0.109.0"
+}
