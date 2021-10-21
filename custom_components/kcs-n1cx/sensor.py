@@ -82,27 +82,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     # initialize KCS TraceME N1Cx API
     device_type = None
-    api = init_api_client(entry)
+    api = KCSTraceMeN1CxDataClient()
     coordinator, sensor_name, device_type = await async_initialize()
 
     # add sensor
     async_add_entities([KCSTraceMeN1CxSensor(coordinator, sensor_name, device_type)], False)
-
-
-def init_api_client(config_entry):
-    """
-    Initialize KCS TraceME N1Cx API client
-    :param config_entry: config entry
-    :return: API client instance
-    """
-    # initialize API client
-    api_instance = None
-    try:
-        api_instance = KCSTraceMeN1CxDataClient()
-    except ValueError as err:
-        _LOGGER.warning(f"[INIT_API_CLIENT] Error: {str(err)}")
-    finally:
-        return api_instance
 
 
 def get_device_info(api, config_entry):
@@ -146,7 +130,7 @@ def decode_payload(api, config_entry):
     # get power consumption data
     data = None
     try:
-        data = api.read_data(gas_enabled, start, end)
+        data = api.parse_data(gas_enabled, start, end)
         _LOGGER.info(f"[READ_CONSUMPTION] Grabbed CO2 gas PPM data: ({start}-{end})")
     except ValueError as err:
         _LOGGER.warning(f"[READ_CONSUMPTION] Error: {str(err)}")

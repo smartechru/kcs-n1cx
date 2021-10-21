@@ -37,17 +37,15 @@ class KCSTraceMeN1CxDataClient:
         """
         self.url = 'https://www.qontrol-vision.com/rak_forward_receive_7258/7cc6c42900010851.payloads'
 
-    def call_api(self, gas_enabled=True, payload=None, tag=None):
+    def call_api(self, tag=None):
         """
         KCS TraceME N1Cx API call base function.
-        :param gas_enabled: CO2 gas PPM feature enable/disable flag
-        :param payload: payload data for GET request
         :param tag: tag for debug
         :return: response of API request
         """
         # call api
         data = None
-        response = requests.get(self.url, params=payload)
+        response = requests.get(self.url)
 
         # fetch data from response object
         if response.status_code in [StatusCode.ST_OK]:
@@ -94,7 +92,7 @@ class KCSTraceMeN1CxDataClient:
         # return valid payload
         return payload
 
-    def read_data(self, gas_enabled, start, end):
+    def parse_data(self, gas_enabled=True, start=None, end=None):
         """
         Returns raw values of the payload published in the given URL.
         Accepts as optional parameters a start date/time, an end date/time.
@@ -103,5 +101,31 @@ class KCSTraceMeN1CxDataClient:
         :param end: end date/time of the period, in the format YYYYMMDDHHmm
         :return: raw data
         """
-        payload = self.get_valid_date(start, end)
-        return self.call_api(gas_enabled, payload=payload)
+        # payload = self.get_valid_date(start, end)
+        raw_data = self.call_api()
+        data_list = raw_data.splitlines()
+        last_data = data_list[-1]
+        raw_payload = last_data.split()[-1]
+
+        # decode data
+        payload = {
+            "id": raw_payload[0:2],
+            "temperature": (int(raw_payload[2:6], 16) // 100) / 10 - 15,
+            "humidity": (int(raw_payload[2:6], 16) % 100),
+            "co2": int(raw_payload[6:10], 16),
+            "pressure": int(raw_payload[10:12], 16) + 900,
+            "air_quality": int(raw_payload[12:14], 16),
+            "io": int(raw_payload[14:16], 16),
+            "battery": 100, # TODO
+            "crc": int(raw_payload[18:22], 16),
+            "fw_version": int(raw_payload[22:26], 16) / 10000.0,
+            "pir_active": int(raw_payload[26:28], 16),
+            "pir_bitfield": int(raw_payload[28:], 16),
+        }
+        return payload.get("co2")
+
+
+if __name__ == "__main__":
+    api = KCSTraceMeN1CxDataClient()
+    data = api.parse_data(True)
+    print(data)
