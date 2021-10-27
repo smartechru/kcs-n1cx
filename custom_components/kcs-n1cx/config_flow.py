@@ -1,7 +1,7 @@
 """
 Script file: config_flow.py
 Created on: Oct 19, 2021
-Last modified on: Oct 21, 2021
+Last modified on: Oct 27, 2021
 
 Comments:
     Config flow for KCS TraceME N1Cx
@@ -17,10 +17,16 @@ from homeassistant.const import (
 )
 from .const import (
     CONF_GAS,
-    CONF_START,
-    CONF_END,
+    CONF_TEMPERATURE,
+    CONF_HUMIDITY,
+    CONF_PRESSURE,
+    CONF_AIR_QUALITY,
+    CONF_BATTERY,
+    CONF_ALL,
+
     DEFAULT_NAME,
     DEFAULT_GAS,
+
     DOMAIN
 )
 
@@ -125,8 +131,12 @@ class KCSTraceMeN1CxOptionsFlow(config_entries.OptionsFlow):
 
         # schema
         config = {
-            vol.Optional(CONF_START, default=self.config_entry.options.get(CONF_START)): str,
-            vol.Optional(CONF_END, default=self.config_entry.options.get(CONF_END)): str
+            vol.Optional(CONF_TEMPERATURE, default=self.config_entry.options.get(CONF_TEMPERATURE)): bool,
+            vol.Optional(CONF_HUMIDITY, default=self.config_entry.options.get(CONF_HUMIDITY)): bool,
+            vol.Optional(CONF_PRESSURE, default=self.config_entry.options.get(CONF_PRESSURE)): bool,
+            vol.Optional(CONF_AIR_QUALITY, default=self.config_entry.options.get(CONF_AIR_QUALITY)): bool,
+            vol.Optional(CONF_BATTERY, default=self.config_entry.options.get(CONF_BATTERY)): bool,
+            vol.Optional(CONF_ALL, default=self.config_entry.options.get(CONF_ALL)): bool,
         }
 
         return self.async_show_form(

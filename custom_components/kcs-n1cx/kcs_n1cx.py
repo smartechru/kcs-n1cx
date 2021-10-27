@@ -1,7 +1,7 @@
 """
 Script file: kcs_n1cx.py
 Created on: Jan Oct 19, 2021
-Last modified on: Oct 21, 2021
+Last modified on: Oct 26, 2021
 
 Comments:
     KCS TraceME N1Cx data api functions
@@ -92,13 +92,11 @@ class KCSTraceMeN1CxDataClient:
         # return valid payload
         return payload
 
-    def parse_data(self, gas_enabled=True, start=None, end=None):
+    def parse_data(self):
         """
         Returns raw values of the payload published in the given URL.
         Accepts as optional parameters a start date/time, an end date/time.
         :param gas_enabled: CO2 gas PPM feature enable/disable flag
-        :param start: start date/time of the period, in the format YYYYMMDDHHmm
-        :param end: end date/time of the period, in the format YYYYMMDDHHmm
         :return: raw data
         """
         # payload = self.get_valid_date(start, end)
@@ -128,4 +126,4 @@ class KCSTraceMeN1CxDataClient:
 if __name__ == "__main__":
     api = KCSTraceMeN1CxDataClient()
     data = api.parse_data(True)
-    print(data)
+    print(data.get("co2"))

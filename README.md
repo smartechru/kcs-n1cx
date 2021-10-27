@@ -59,8 +59,6 @@ kcs_n1cx:
   air_quality: false    # air quality disabled
   battery: true         # battery level enabled
   all: false            # all features disabled
-  start: 202110080130   # start date/time (FORMAT: YYYYMMDDHHmm)
-  end: 202110201125     # end date/time (FORMAT: YYYYMMDDHHmm)
 
 ```
 
@@ -76,9 +74,7 @@ kcs_n1cx:
 | `air_quality` | Yes | Air quality feature enable/disable flag (default: `false`) |
 | `battery` | Yes | Battery level feature enable/disable flag (default: `false`) |
 | `all` | Yes | All features enable/disable flag (default: `false`) |
-| `start` | Yes | Start date/time of the period in the format YYYYMMDDHHmm |
-| `end` | Yes | End date/time of the period in the format YYYYMMDDHHmm |
 
 ## STATE
 
-Returns values for the specified utility (e.g. CO2 gas, temperature, humitidy, etc.). Accepts as optional parameters a start date/time, an end date/time, etc.
+Returns values for the specified utility (e.g. CO2 gas, temperature, humitidy, etc.)

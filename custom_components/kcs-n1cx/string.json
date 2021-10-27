@@ -1,15 +1,13 @@
 {
-    "title": "n3rgy data",
+    "title": "KCS TraceME N1Cx",
     "config": {
         "step": {
             "user": {
                 "title": "Sensor Configuration",
-                "description": "If you need help with the configuration have a look here:\nhttps://github.com/smartechru/n3rgy.",
+                "description": "If you need help with the configuration have a look here:\nhttps://github.com/smartechru/kcs-n1cx.",
                 "data": {
                     "name": "[%key:common::config_flow::data::name%]",
-                    "host": "[%key:common::config_flow::data::host%]",
-                    "api_key": "[%key:common::config_flow::data::api_key%]",
-                    "property_id": "Property ID (can be either an MPAN or MPRN)"
+                    "gas": "[%key:common::config_flow::data::gas%]"
                 }
             }
         },
@@ -26,13 +24,14 @@
         "step": {
             "user": {
                 "title": "Sensor Options",
-                "description": "You can set the environment, start datetime, end datetime.\nA 'Grant Consent' service in a Live environment will be available soon.\nIf you need help with the configuration have a look here:\nhttps://github.com/smartechru/n3rgy.",
+                "description": "You can set the utility options here.\nThis will be available soon.\nIf you need help with the configuration have a look here:\nhttps://github.com/smartechru/kcs-n1cx.",
                 "data": {
-                    "environment": "Live environment (for real MPxNs)",
-                    "daily_update": "Daily update",
-                    "utility": "Utility",
-                    "start": "Start (format: YYYYMMDDHHmm)",
-                    "end": "End (format: YYYYMMDDHHmm)"
+                    "temperature": "Temperature",
+                    "humidity": "Humidity",
+                    "pressure": "Pressure",
+                    "air_quality": "Air Quality",
+                    "battery": "Battery",
+                    "all": "All Data"
                 }
             }
         }

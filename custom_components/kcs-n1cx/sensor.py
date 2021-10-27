@@ -1,7 +1,7 @@
 """
 Script file: sensor.py
 Created on: Oct 19, 2021
-Last modified on: Oct 21, 2021
+Last modified on: Oct 27, 2021
 
 Comments:
     Support for KCS TraceME N1Cx sensor
@@ -19,8 +19,6 @@ from homeassistant.const import(
 )
 from .const import (
     CONF_GAS,
-    CONF_START,
-    CONF_END,
 
     PLATFORM,
     ATTRIBUTION,
@@ -31,11 +29,6 @@ from .const import (
     DEFAULT_GAS,
     DEFAULT_DEVICE_TYPE,
 
-    INPUT_DATETIME_FORMAT,
-    ATTR_DATETIME_FORMAT,
-
-    ATTR_START_DATETIME,
-    ATTR_END_DATETIME,
     ATTR_DEVICE_TYPE,
 )
 from .kcs_n1cx import KCSTraceMeN1CxDataClient
@@ -58,7 +51,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         Fetch data from KCS TraceME N1Cx API
         This is the place to pre-process the data to lookup tables so entities can quickly look up their data
         :param: none
-        :return: CO2 gas PPM data
+        :return: json data decoded
         """
         return await hass.async_add_executor_job(decode_payload, api, entry)
 
@@ -96,12 +89,10 @@ def get_device_info(api, config_entry):
     :param config_entry: config entry
     :return: (device name, smarte meter type)
     """
-    gas_enabled = False
     sensor_name = DEFAULT_NAME
 
     # check the input data
     if config_entry.data:
-        gas_enabled = config_entry.data.get(CONF_GAS)
         sensor_name = config_entry.data.get(CONF_NAME)
 
     # get device type
@@ -111,29 +102,17 @@ def get_device_info(api, config_entry):
 
 def decode_payload(api, config_entry):
     """
-    List consumption values for an utility type on the provided accessible property, within a certain time frame
+    List raw values from the given API
     :param api: KCS TraceME N1Cx api client
     :param config_entry: config entry
-    :return: consumption data list
+    :return: data list in json format
     """
-    # read the configuration data
-    gas_enabled = DEFAULT_GAS
-    start = None
-    end = None
-
-    # check options
-    if config_entry.options:
-        gas_enabled = config_entry.options.get(CONF_GAS)
-        start = config_entry.options.get(CONF_START)
-        end = config_entry.options.get(CONF_END)
-
-    # get power consumption data
+    # get sensor readings
     data = None
     try:
-        data = api.parse_data(gas_enabled, start, end)
-        _LOGGER.info(f"[READ_CONSUMPTION] Grabbed CO2 gas PPM data: ({start}-{end})")
+        data = api.parse_data()
     except ValueError as err:
-        _LOGGER.warning(f"[READ_CONSUMPTION] Error: {str(err)}")
+        _LOGGER.warning(f"[API] Error: {str(err)}")
     finally:
         return data
 
@@ -202,9 +181,7 @@ class KCSTraceMeN1CxSensor(Entity):
         :param: none
         :return: data unit
         """
-        if self._coordinator.data:
-            return self._coordinator.data['unit']
-        return None
+        return 'PPM'
 
     @property
     def should_poll(self):
@@ -227,21 +204,6 @@ class KCSTraceMeN1CxSensor(Entity):
             ATTR_DEVICE_TYPE: self._device_type,
             ATTR_ATTRIBUTION: ATTRIBUTION
         }
-
-        if not self._coordinator.data:
-            return attributes
-
-        # reformat date/time
-        try:
-            str_start = self._coordinator.data['start']
-            str_end = self._coordinator.data['end']
-            dt_start = datetime.strptime(str_start, INPUT_DATETIME_FORMAT)
-            dt_end = datetime.strptime(str_end, INPUT_DATETIME_FORMAT)
-            attributes[ATTR_START_DATETIME] = datetime.strftime(dt_start, ATTR_DATETIME_FORMAT)
-            attributes[ATTR_END_DATETIME] = datetime.strftime(dt_end, ATTR_DATETIME_FORMAT)
-        except:
-            _LOGGER.warning("Failed to reformat datetime object")
-
         return attributes
 
     @property
@@ -261,9 +223,8 @@ class KCSTraceMeN1CxSensor(Entity):
         """
         if self._coordinator.data:
             # get consumption value
-            value_list = self._coordinator.data['values']
-            values = [v['value'] for v in value_list]
-            self._state = f"{sum(values):.2f}"
+            value = self._coordinator.data.get('co2')
+            self._state = f"{value:.2f}"
 
     async def async_added_to_hass(self):
         """

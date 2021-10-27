@@ -1,7 +1,7 @@
 """
 Script file: const.py
 Created on: Oct 19, 2021
-Last modified on: Oct 21, 2021
+Last modified on: Oct 27, 2021
 
 Comments:
     Constants for the KCS TraceME N1Cx integration
@@ -12,8 +12,12 @@ DATA_LISTENER = "listener"
 
 # config options
 CONF_GAS = "gas"
-CONF_START = "start"
-CONF_END = "end"
+CONF_TEMPERATURE = "temperature"
+CONF_HUMIDITY = "humidity"
+CONF_PRESSURE = "pressure"
+CONF_AIR_QUALITY = "air_quality"
+CONF_BATTERY = "battery"
+CONF_ALL = "all"
 
 # properties
 PLATFORM = "sensor"
@@ -23,14 +27,15 @@ ICON = "mdi:flash"
 
 # default values
 DEFAULT_NAME = "CO2 Level"
-DEFAULT_GAS = True
 DEFAULT_DEVICE_TYPE = "Not specified"
+DEFAULT_GAS = True
+DEFAULT_TEMPERATURE = False
+DEFAULT_HUMIDITY = False
+DEFAULT_PRESSURE = False
+DEFAULT_AIR_QUALITY = False
+DEFAULT_BATTERY = False
+DEFAULT_ALL = False
 
 # attributes
-ATTR_START_DATETIME = "Start datetime"
-ATTR_END_DATETIME = "End datetime"
-ATTR_DEVICE_TYPE = "Smart meter type"
+ATTR_DEVICE_TYPE = "Device type"
 
-# date/time formatter
-INPUT_DATETIME_FORMAT = "%Y%m%d%H%M"
-ATTR_DATETIME_FORMAT = "%m/%d/%Y %H:%M"
