@@ -120,10 +120,4 @@ class KCSTraceMeN1CxDataClient:
             "pir_active": int(raw_payload[26:28], 16),
             "pir_bitfield": int(raw_payload[28:], 16),
         }
-        return payload.get("co2")
-
-
-if __name__ == "__main__":
-    api = KCSTraceMeN1CxDataClient()
-    data = api.parse_data(True)
-    print(data.get("co2"))
+        return payload
