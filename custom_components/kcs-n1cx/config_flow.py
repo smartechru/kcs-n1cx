@@ -1,7 +1,7 @@
 """
 Script file: config_flow.py
 Created on: Oct 19, 2021
-Last modified on: Oct 27, 2021
+Last modified on: Nov 2, 2021
 
 Comments:
     Config flow for KCS TraceME N1Cx
@@ -16,6 +16,7 @@ from homeassistant.const import (
     CONF_NAME
 )
 from .const import (
+    CONF_DEV_EUI,
     CONF_GAS,
     CONF_TEMPERATURE,
     CONF_HUMIDITY,
@@ -25,6 +26,7 @@ from .const import (
     CONF_ALL,
 
     DEFAULT_NAME,
+    DEFAULT_DEV_EUI,
     DEFAULT_GAS,
 
     DOMAIN
@@ -62,6 +64,7 @@ class KCSTraceMeN1CxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         # schema
         config = {
+            vol.Required(CONF_DEV_EUI, default=DEFAULT_DEV_EUI): str,
             vol.Required(CONF_GAS, default=DEFAULT_GAS): bool,
             vol.Optional(CONF_NAME, default=DEFAULT_NAME): str
         }
@@ -131,6 +134,7 @@ class KCSTraceMeN1CxOptionsFlow(config_entries.OptionsFlow):
 
         # schema
         config = {
+            vol.Optional(CONF_DEV_EUI, default=self.config_entry.options.get(CONF_DEV_EUI)): str,
             vol.Optional(CONF_TEMPERATURE, default=self.config_entry.options.get(CONF_TEMPERATURE)): bool,
             vol.Optional(CONF_HUMIDITY, default=self.config_entry.options.get(CONF_HUMIDITY)): bool,
             vol.Optional(CONF_PRESSURE, default=self.config_entry.options.get(CONF_PRESSURE)): bool,

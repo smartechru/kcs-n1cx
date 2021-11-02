@@ -1,7 +1,7 @@
 """
 Script file: kcs_n1cx.py
 Created on: Jan Oct 19, 2021
-Last modified on: Oct 26, 2021
+Last modified on: Nov 2, 2021
 
 Comments:
     KCS TraceME N1Cx data api functions
@@ -29,13 +29,13 @@ class KCSTraceMeN1CxDataClient:
     processed into an easy to consume format.
     """
 
-    def __init__(self):
+    def __init__(self, dev_eui):
         """
         Initialize data api client.
-        :param: none
+        :param dev_eui: LoraWAN DevEUI (HEX)
         :return: none
         """
-        self.url = 'https://www.qontrol-vision.com/rak_forward_receive_7258/7cc6c42900010851.payloads'
+        self.url = f'https://www.qontrol-vision.com/rak_forward_receive_7258/{dev_eui.lower()}.payloads'
 
     def call_api(self, tag=None):
         """

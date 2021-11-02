@@ -15,6 +15,7 @@ Add **KCS TraceME N1Cx** sensor in your `configuration.yaml`.
 
 kcs_n1cx:
   name: 'CO2 Level'
+  dev_eui: '7CC6C42900010851'
   gas: true
 
 ```
@@ -39,6 +40,7 @@ kcs_n1cx:
 | Parameter | Optional | Description |
 |:--------- | -------- | ----------- |
 | `name` | Yes | Sensor name |
+| `dev_eui` | No | LoraWAN DevEUI |
 | `gas` | No | CO2 gas PPM feature enable/disable flag (default: `true`) |
 | `temperature` | Yes | Temperature feature enable/disable flag (default: `false`) |
 | `humidity` | Yes | Humidity feature enable/disable flag (default: `false`) |

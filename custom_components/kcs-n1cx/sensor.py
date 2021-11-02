@@ -1,7 +1,7 @@
 """
 Script file: sensor.py
 Created on: Oct 19, 2021
-Last modified on: Oct 27, 2021
+Last modified on: Nov 2, 2021
 
 Comments:
     Support for KCS TraceME N1Cx sensor
@@ -18,6 +18,7 @@ from homeassistant.const import(
     CONF_NAME
 )
 from .const import (
+    CONF_DEV_EUI,
     CONF_GAS,
 
     PLATFORM,
@@ -26,10 +27,16 @@ from .const import (
     ICON,
 
     DEFAULT_NAME,
+    DEFAULT_DEV_EUI,
     DEFAULT_GAS,
     DEFAULT_DEVICE_TYPE,
 
     ATTR_DEVICE_TYPE,
+    ATTR_TEMPERATURE,
+    ATTR_HUMIDITY,
+    ATTR_PRESSURE,
+    ATTR_AIR_QUALITY,
+    ATTR_BATTERY
 )
 from .kcs_n1cx import KCSTraceMeN1CxDataClient
 
@@ -74,8 +81,12 @@ async def async_setup_entry(hass, entry, async_add_entities):
         return (coordinator, sensor_name, device_type)
 
     # initialize KCS TraceME N1Cx API
+    dev_eui = DEFAULT_DEV_EUI
+    if entry.data:
+        dev_eui = entry.data.get(CONF_DEV_EUI)
+
     device_type = None
-    api = KCSTraceMeN1CxDataClient()
+    api = KCSTraceMeN1CxDataClient(dev_eui)
     coordinator, sensor_name, device_type = await async_initialize()
 
     # add sensor
@@ -204,6 +215,11 @@ class KCSTraceMeN1CxSensor(Entity):
             ATTR_DEVICE_TYPE: self._device_type,
             ATTR_ATTRIBUTION: ATTRIBUTION
         }
+
+        if self._coordinator.data:
+            attributes[ATTR_TEMPERATURE] = self._coordinator.data.get('temperature'),
+            attributes[ATTR_HUMIDITY] = self._coordinator.data.get('humidity')
+
         return attributes
 
     @property

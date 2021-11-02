@@ -1,6 +1,6 @@
 {
     "domain": "kcs_n1cx",
-    "version": "1.0.0",
+    "version": "0.0.3",
     "name": "KCS TraceME N1Cx",
     "documentation": "https://github.com/smartechru/kcs-n1cx",
     "dependencies": [],

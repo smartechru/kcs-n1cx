@@ -7,6 +7,7 @@
                 "description": "If you need help with the configuration have a look here:\nhttps://github.com/smartechru/kcs-n1cx.",
                 "data": {
                     "name": "Name",
+                    "dev_eui": "DevEUI",
                     "gas": "Gas"
                 }
             }
@@ -26,6 +27,7 @@
                 "title": "Sensor Options",
                 "description": "You can set the utility options here.\nThis will be available soon.\nIf you need help with the configuration have a look here:\nhttps://github.com/smartechru/kcs-n1cx.",
                 "data": {
+                    "dev_eui": "DevEUI",
                     "temperature": "Temperature",
                     "humidity": "Humidity",
                     "pressure": "Pressure",
