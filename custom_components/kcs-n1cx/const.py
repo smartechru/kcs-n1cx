@@ -1,7 +1,7 @@
 """
 Script file: const.py
 Created on: Oct 19, 2021
-Last modified on: Nov 2, 2021
+Last modified on: Nov 6, 2021
 
 Comments:
     Constants for the KCS TraceME N1Cx integration

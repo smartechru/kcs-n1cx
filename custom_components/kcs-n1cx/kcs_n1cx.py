@@ -1,7 +1,7 @@
 """
 Script file: kcs_n1cx.py
 Created on: Jan Oct 19, 2021
-Last modified on: Nov 2, 2021
+Last modified on: Nov 5, 2021
 
 Comments:
     KCS TraceME N1Cx data api functions
@@ -35,7 +35,10 @@ class KCSTraceMeN1CxDataClient:
         :param dev_eui: LoraWAN DevEUI (HEX)
         :return: none
         """
-        self.url = f'https://www.qontrol-vision.com/rak_forward_receive_7258/{dev_eui.lower()}.payloads'
+        if dev_eui is not None:
+            self.url = f'https://www.qontrol-vision.com/rak_forward_receive_7258/{dev_eui.lower()}.payloads'
+        else:
+            _LOGGER.warning("Failed to intialize API client")
 
     def call_api(self, tag=None):
         """
@@ -114,10 +117,14 @@ class KCSTraceMeN1CxDataClient:
             "pressure": int(raw_payload[10:12], 16) + 900,
             "air_quality": int(raw_payload[12:14], 16),
             "io": int(raw_payload[14:16], 16),
-            "battery": 100, # TODO
             "crc": int(raw_payload[18:22], 16),
             "fw_version": int(raw_payload[22:26], 16) / 10000.0,
             "pir_active": int(raw_payload[26:28], 16),
             "pir_bitfield": int(raw_payload[28:], 16),
         }
+
+        raw_battery = int(raw_payload[16:18])
+        battery = (raw_battery * 0.007 + 1.8) if raw_battery < 65 else (raw_battery * 0.046 + 2.925)
+        payload["battery"] = battery
+
         return payload

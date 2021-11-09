@@ -1,7 +1,7 @@
 """
 Script file: sensor.py
 Created on: Oct 19, 2021
-Last modified on: Nov 2, 2021
+Last modified on: Nov 8, 2021
 
 Comments:
     Support for KCS TraceME N1Cx sensor
@@ -30,6 +30,12 @@ from .const import (
     DEFAULT_DEV_EUI,
     DEFAULT_GAS,
     DEFAULT_DEVICE_TYPE,
+    DEFAULT_TEMPERATURE,
+    DEFAULT_HUMIDITY,
+    DEFAULT_PRESSURE,
+    DEFAULT_AIR_QUALITY,
+    DEFAULT_BATTERY,
+    DEFAULT_ALL,
 
     ATTR_DEVICE_TYPE,
     ATTR_TEMPERATURE,
@@ -81,16 +87,27 @@ async def async_setup_entry(hass, entry, async_add_entities):
         return (coordinator, sensor_name, device_type)
 
     # initialize KCS TraceME N1Cx API
-    dev_eui = DEFAULT_DEV_EUI
+    dev_eui = None
     if entry.data:
-        dev_eui = entry.data.get(CONF_DEV_EUI)
+        dev_eui = entry.data.get(CONF_DEV_EUI, DEFAULT_DEV_EUI)
 
-    device_type = None
     api = KCSTraceMeN1CxDataClient(dev_eui)
     coordinator, sensor_name, device_type = await async_initialize()
 
+    # get options
+    options = None
+    if entry.data:
+        options = {
+            "temperature": entry.data.get(CONF_TEMPERATURE, DEFAULT_TEMPERATURE),
+            "temperature": entry.data.get(CONF_HUMIDITY, DEFAULT_HUMIDITY),
+            "pressure": entry.data.get(CONF_PRESSURE, DEFAULT_PRESSURE),
+            "air_quality": entry.data.get(CONF_AIR_QUALITY, DEFAULT_AIR_QUALITY),
+            "battery": entry.data.get(CONF_BATTERY, DEFAULT_BATTERY),
+            "all": entry.data.get(CONF_ALL, DEFAULT_ALL)
+        }
+
     # add sensor
-    async_add_entities([KCSTraceMeN1CxSensor(coordinator, sensor_name, device_type)], False)
+    async_add_entities([KCSTraceMeN1CxSensor(coordinator, sensor_name, device_type, options)], False)
 
 
 def get_device_info(api, config_entry):
@@ -100,11 +117,11 @@ def get_device_info(api, config_entry):
     :param config_entry: config entry
     :return: (device name, smarte meter type)
     """
-    sensor_name = DEFAULT_NAME
+    sensor_name = None
 
     # check the input data
     if config_entry.data:
-        sensor_name = config_entry.data.get(CONF_NAME)
+        sensor_name = config_entry.data.get(CONF_NAME, DEFAULT_NAME)
 
     # get device type
     device_type = None
@@ -131,12 +148,13 @@ def decode_payload(api, config_entry):
 class KCSTraceMeN1CxSensor(Entity):
     """Implementation of a sensor"""
 
-    def __init__(self, coordinator, sensor_name, device_type):
+    def __init__(self, coordinator, sensor_name, device_type, options):
         """
         Initialize sensor class
         :param coordinator: data coordinator object
         :param sensor_name: device name
         :param device_type: device type
+        :param options: option flags
         :return: none
         """
         self._name = sensor_name
@@ -144,6 +162,7 @@ class KCSTraceMeN1CxSensor(Entity):
         self._state = None
         self._coordinator = coordinator
         self._device_type = DEFAULT_DEVICE_TYPE
+        self._options = options
 
         # parameter validation
         if device_type is not None:
@@ -216,9 +235,17 @@ class KCSTraceMeN1CxSensor(Entity):
             ATTR_ATTRIBUTION: ATTRIBUTION
         }
 
-        if self._coordinator.data:
-            attributes[ATTR_TEMPERATURE] = self._coordinator.data.get('temperature'),
-            attributes[ATTR_HUMIDITY] = self._coordinator.data.get('humidity')
+        if self._coordinator.data and self._options:
+            if self._options.get('temperature'):
+                attributes[ATTR_TEMPERATURE] = f'{self._coordinator.data.get('temperature'):.2f} °C',
+            if self._options.get('humidity'):
+                attributes[ATTR_HUMIDITY] = f'{self._coordinator.data.get('humidity'):.2f} %'
+            if self._options.get('pressure'):
+                attributes[ATTR_PRESSURE] = f'{self._coordinator.data.get('pressure'):.2f} hPa'
+            if self._options.get('air_quality'):
+                attributes[ATTR_AIR_QUALITY] = self._coordinator.data.get('air_quality')
+            if self._options.get('battery'):
+                atrributes[ATTR_BATTERY] = f'{self._coordinator.data.get('battery'):.3f} V'
 
         return attributes
 
