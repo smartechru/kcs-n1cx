@@ -252,13 +252,13 @@ class KCSTraceMeN1CxSensor(Entity):
             if self._options.get('air_quality'):
                 attributes[ATTR_AIR_QUALITY] = self._coordinator.data.get('air_quality')
             if self._options.get('battery'):
-                atrributes[ATTR_BATTERY] = f"{self._coordinator.data.get('battery'):.3f} V"
+                attributes[ATTR_BATTERY] = f"{self._coordinator.data.get('battery'):.3f} V"
             """
             attributes[ATTR_TEMPERATURE] = f"{self._coordinator.data.get('temperature'):.2f} °C",
             attributes[ATTR_HUMIDITY] = f"{self._coordinator.data.get('humidity'):.2f} %"
             attributes[ATTR_PRESSURE] = f"{self._coordinator.data.get('pressure'):.2f} hPa"
             attributes[ATTR_AIR_QUALITY] = self._coordinator.data.get('air_quality')
-            atrributes[ATTR_BATTERY] = f"{self._coordinator.data.get('battery'):.3f} V"
+            attributes[ATTR_BATTERY] = f"{self._coordinator.data.get('battery'):.3f} V"
 
         return attributes
 
