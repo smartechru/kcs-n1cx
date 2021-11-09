@@ -25,6 +25,7 @@ from .const import (
     CONF_PRESSURE,
     CONF_AIR_QUALITY,
     CONF_BATTERY,
+    CONF_ALL,
 
     PLATFORM,
     ATTRIBUTION,
