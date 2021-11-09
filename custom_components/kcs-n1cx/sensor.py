@@ -105,7 +105,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     if entry.data:
         options = {
             "temperature": entry.data.get(CONF_TEMPERATURE, DEFAULT_TEMPERATURE),
-            "temperature": entry.data.get(CONF_HUMIDITY, DEFAULT_HUMIDITY),
+            "humidity": entry.data.get(CONF_HUMIDITY, DEFAULT_HUMIDITY),
             "pressure": entry.data.get(CONF_PRESSURE, DEFAULT_PRESSURE),
             "air_quality": entry.data.get(CONF_AIR_QUALITY, DEFAULT_AIR_QUALITY),
             "battery": entry.data.get(CONF_BATTERY, DEFAULT_BATTERY),
@@ -242,6 +242,7 @@ class KCSTraceMeN1CxSensor(Entity):
         }
 
         if self._coordinator.data and self._options:
+            """
             if self._options.get('temperature'):
                 attributes[ATTR_TEMPERATURE] = f"{self._coordinator.data.get('temperature'):.2f} °C",
             if self._options.get('humidity'):
@@ -252,6 +253,12 @@ class KCSTraceMeN1CxSensor(Entity):
                 attributes[ATTR_AIR_QUALITY] = self._coordinator.data.get('air_quality')
             if self._options.get('battery'):
                 atrributes[ATTR_BATTERY] = f"{self._coordinator.data.get('battery'):.3f} V"
+            """
+            attributes[ATTR_TEMPERATURE] = f"{self._coordinator.data.get('temperature'):.2f} °C",
+            attributes[ATTR_HUMIDITY] = f"{self._coordinator.data.get('humidity'):.2f} %"
+            attributes[ATTR_PRESSURE] = f"{self._coordinator.data.get('pressure'):.2f} hPa"
+            attributes[ATTR_AIR_QUALITY] = self._coordinator.data.get('air_quality')
+            atrributes[ATTR_BATTERY] = f"{self._coordinator.data.get('battery'):.3f} V"
 
         return attributes
 
