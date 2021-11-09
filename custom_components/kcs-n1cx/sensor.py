@@ -20,6 +20,11 @@ from homeassistant.const import(
 from .const import (
     CONF_DEV_EUI,
     CONF_GAS,
+    CONF_TEMPERATURE,
+    CONF_HUMIDITY,
+    CONF_PRESSURE,
+    CONF_AIR_QUALITY,
+    CONF_BATTERY,
 
     PLATFORM,
     ATTRIBUTION,
